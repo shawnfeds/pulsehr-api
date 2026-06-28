@@ -1,0 +1,59 @@
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+asax/
+our/
+ar/
+bld/
+[Bb]in/
+[Oo]bj/
+[Log]/
+[Ll]ogs/
+
+## Visual Studio 2015/2017/2019/2022 cache stage/options
+.vs/
+# Generated file: project.lock.json
+project.lock.json
+project.fragment.lock.json
+
+## Rider
+.idea/
+*.sln.iml
+
+## VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+## .NET Core
+project.assets.json
+*.csproj.user
+*.usersecrets
+*.suo
+*.sln.docstates
+
+## Publishing / Deployment
+*.pubxml
+*.pubxml.user
+
+## AppSettings Local Secrets (optional override logs)
+appsettings.local.json
+
+## Uploaded Files (Avatar & Policy file uploads)
+PulseHR.Api/wwwroot/uploads/
