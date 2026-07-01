@@ -46,9 +46,9 @@ public partial class PulseHRContext : DbContext
     {
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc', now())");
             entity.Property(e => e.Status).HasDefaultValue("active");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("timezone('utc', now())");
             entity.Property(e => e.UserType).HasDefaultValue("Employee");
         });
 
@@ -76,16 +76,16 @@ public partial class PulseHRContext : DbContext
 
         modelBuilder.Entity<Leave>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc', now())");
             entity.Property(e => e.Status).HasDefaultValue("pending");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Leaves).HasConstraintName("FK_Leaves_Employee");
         });
 
         modelBuilder.Entity<LeaveBalance>(entity =>
         {
-            entity.Property(e => e.Balance).HasComputedColumnSql("([Total]-[Used])", true);
+            entity.Property(e => e.Balance).HasComputedColumnSql("(\"Total\" - \"Used\")", true);
             entity.Property(e => e.Total).HasDefaultValue(12m);
 
             entity.HasOne(d => d.Employee).WithMany(p => p.LeaveBalances).HasConstraintName("FK_LeaveBalances_Employee");
@@ -93,14 +93,14 @@ public partial class PulseHRContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Notifications).HasConstraintName("FK_Notifications_Employee");
         });
 
         modelBuilder.Entity<Policy>(entity =>
         {
-            entity.Property(e => e.UploadedOn).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.UploadedOn).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.UploadedByEmployee).WithMany(p => p.Policies)
                 .OnDelete(DeleteBehavior.SetNull)
@@ -109,9 +109,9 @@ public partial class PulseHRContext : DbContext
 
         modelBuilder.Entity<Project>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc', now())");
             entity.Property(e => e.Status).HasDefaultValue("active");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.ManagerEmployee).WithMany(p => p.Projects)
                 .OnDelete(DeleteBehavior.SetNull)
@@ -120,7 +120,7 @@ public partial class PulseHRContext : DbContext
 
         modelBuilder.Entity<ProjectMember>(entity =>
         {
-            entity.Property(e => e.AssignedOn).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.AssignedOn).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.ProjectMembers)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -131,7 +131,7 @@ public partial class PulseHRContext : DbContext
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.RefreshTokens).HasConstraintName("FK_RefreshTokens_Employee");
         });
@@ -143,8 +143,8 @@ public partial class PulseHRContext : DbContext
 
         modelBuilder.Entity<TimesheetEntry>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("timezone('utc', now())");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("timezone('utc', now())");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.TimesheetEntries).HasConstraintName("FK_Timesheet_Employee");
 

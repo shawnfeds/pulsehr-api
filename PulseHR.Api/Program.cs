@@ -19,7 +19,7 @@ builder.Host.UseSerilog();
 
 // ── Database ──────────────────────────────────────────────
 builder.Services.AddDbContext<PulseHRContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ── Authentication ────────────────────────────────────────
 var jwtKey = builder.Configuration["Jwt:Key"]

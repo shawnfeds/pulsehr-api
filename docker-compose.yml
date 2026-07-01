@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  pulsehr-db:
+    image: postgres:16
+    container_name: pulsehr-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: PulseHR
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pulsehr_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  pulsehr_postgres_data:

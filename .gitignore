@@ -54,6 +54,7 @@ project.assets.json
 
 ## AppSettings Local Secrets (optional override logs)
 appsettings.local.json
+appsettings.Development.json
 
 ## Uploaded Files (Avatar & Policy file uploads)
 PulseHR.Api/wwwroot/uploads/
