@@ -180,17 +180,18 @@ var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
+// Swagger available in all environments (for testing hosted API)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "PulseHR API v1");
-        c.RoutePrefix = "swagger";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "PulseHR API v1");
+    c.RoutePrefix = "swagger";
+});
 
-app.UseHttpsRedirection();
+// Skip HTTPS redirect in production — Render handles SSL at the proxy level
+if (!app.Environment.IsProduction())
+    app.UseHttpsRedirection();
+
 app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseCors("PulseHRCors");

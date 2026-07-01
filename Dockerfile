@@ -22,6 +22,9 @@ WORKDIR /app
 # Copy published output
 COPY --from=publish /app/publish .
 
+# Pre-create uploads directory (required by UseStaticFiles + file upload feature)
+RUN mkdir -p /app/wwwroot/uploads
+
 # Render uses port 8080 by default
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
