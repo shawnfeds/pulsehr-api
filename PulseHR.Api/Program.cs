@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PulseHR.Api.Data;
 using PulseHR.Api.Middleware;
-using PulseHR.Api.Models;
 using PulseHR.Api.Services;
 using Serilog;
 
@@ -204,109 +203,5 @@ app.UseAuthorization();
 app.MapHealthChecks("/health").AllowAnonymous();
 
 app.MapControllers();
-
-// ── Automatic Database Creation & Seeding ──────────────────
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<PulseHRContext>();
-    try
-    {
-        // Automatically create PostgreSQL tables if they don't exist
-        context.Database.EnsureCreated();
-
-        // Seed Roles
-        if (!context.Roles.Any())
-        {
-            context.Roles.AddRange(
-                new Role { Name = "Admin", Description = "System administrator with full access" },
-                new Role { Name = "Employee", Description = "Standard employee with self-service access" }
-            );
-            context.SaveChanges();
-        }
-
-        var adminRole = context.Roles.FirstOrDefault(r => r.Name == "Admin");
-        var employeeRole = context.Roles.FirstOrDefault(r => r.Name == "Employee");
-
-        // Seed Default Admin User
-        if (!context.Employees.Any(e => e.Email == "admin@pulsehr.com"))
-        {
-            var admin = new Employee
-            {
-                Name = "Administrator",
-                Email = "admin@pulsehr.com",
-                PasswordHash = "$2a$11$qR3mO528r20Jm6o2yLdWeeM0wBvHlhjD4QvA6B97R9xK6a8gL5xUq", // AdminPassword123!
-                PasswordSalt = string.Empty,
-                IsAdmin = true,
-                UserType = "Admin",
-                Role = "System Admin",
-                Dept = "IT",
-                Status = "active",
-                JoinDate = new DateOnly(2026, 1, 1),
-                Phone = "+1 555 0199",
-                Location = "New York, NY",
-                AvatarText = "AD",
-                AvatarColor = "#dc2626",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            context.Employees.Add(admin);
-            context.SaveChanges();
-
-            if (adminRole != null)
-            {
-                context.EmployeeRoles.Add(new EmployeeRole { EmployeeId = admin.EmployeeId, RoleId = adminRole.RoleId });
-            }
-
-            context.LeaveBalances.AddRange(
-                new LeaveBalance { EmployeeId = admin.EmployeeId, LeaveType = "Sick", Total = 12, Used = 0 },
-                new LeaveBalance { EmployeeId = admin.EmployeeId, LeaveType = "Casual", Total = 12, Used = 0 }
-            );
-            context.SaveChanges();
-        }
-
-        // Seed Default Employee User
-        if (!context.Employees.Any(e => e.Email == "priya@pulsehr.com"))
-        {
-            var employee = new Employee
-            {
-                Name = "Priya Sharma",
-                Email = "priya@pulsehr.com",
-                PasswordHash = "$2a$11$0F/oM5eJswK9c64Jt3bO7O.lC5eNq5D1jV9aVf6Zk9XyS7t5T.Z6i", // EmployeePassword123!
-                PasswordSalt = string.Empty,
-                IsAdmin = false,
-                UserType = "Employee",
-                Role = "Software Engineer",
-                Dept = "Engineering",
-                Status = "active",
-                JoinDate = new DateOnly(2026, 2, 15),
-                Phone = "+91 98765 43210",
-                Location = "Bengaluru, KA",
-                AvatarText = "PS",
-                AvatarColor = "#7c3aed",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            context.Employees.Add(employee);
-            context.SaveChanges();
-
-            if (employeeRole != null)
-            {
-                context.EmployeeRoles.Add(new EmployeeRole { EmployeeId = employee.EmployeeId, RoleId = employeeRole.RoleId });
-            }
-
-            context.LeaveBalances.AddRange(
-                new LeaveBalance { EmployeeId = employee.EmployeeId, LeaveType = "Sick", Total = 12, Used = 0 },
-                new LeaveBalance { EmployeeId = employee.EmployeeId, LeaveType = "Casual", Total = 12, Used = 0 }
-            );
-            context.SaveChanges();
-        }
-    }
-    catch (Exception ex)
-    {
-        Log.Error(ex, "An error occurred while seeding the database.");
-    }
-}
 
 app.Run();
