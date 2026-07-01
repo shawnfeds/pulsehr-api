@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build outputs (we restore inside Docker)
+**/bin/
+**/obj/
+
+# Logs
+**/Logs/
+
+# Local secrets
+**/appsettings.Development.json
+**/appsettings.local.json
+
+# Uploaded files
+**/wwwroot/uploads/
+
+# Docs / SQL scripts (not needed at runtime)
+*.md
+*.sql
